@@ -1,11 +1,13 @@
 const Equipo_model = require('../models/Equipo_model');
 
 class EquipoController{
+    ver_equipos(){
+        return new Promise((resolve, reject)=>{
+            Equipo_model.ver_equipos().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
+        })  
+    }
     ingresar_equipo(equipo){
         return Equipo_model.ingresar_equipo(equipo);
-    }
-    ver_equipos(){
-        return Equipo_model.ver_equipos();
     }
     ver_equipos_views(){
         let mostrarequipos= Equipo_model.ver_equipos_views();

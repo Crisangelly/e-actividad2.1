@@ -9,9 +9,12 @@ router.get('/nuevoPatrocinador',function(req, res, next){
 })  
 
 router.get('/', function(req, res, next){
-   let ver = Patrocinador_Controller.ver_patrocinador();
-   res.status(ver.codigo).send(ver.resultado)
-});
+   Patrocinador_Controller.ver_patrocinador().then((resultados)=>{
+      res.json(resultados);
+  }).catch((error)=>{
+      res.status(500).send(error)
+  })
+}); 
 
 /* POST */
 

@@ -6,16 +6,19 @@ const Categoria_Controller = require('../controllers/Categoria_Controller');
 /* GET */
 
 router.get('/', function (req, res, next) {
-    let ver = Equipos_Controller.ver_equipos()
-    res.status(ver.codigo).send(ver.resultado)
+    Equipos_Controller.ver_equipos().then((resultados)=>{
+        res.json(resultados);
+    }).catch((error)=>{
+        res.status(500).send(error)
+    })
 });
 
-router.get('/verEquipos',function(req, res, next){
+/* router.get('/verEquipos',function(req, res, next){
     let equipos = Equipos_Controller.ver_equipos_views()
     let categorias = Categoria_Controller.mostrar_categorias()
     console.log(equipos)
     res.render('verEquipos',{title: 'Equipos', equipos: equipos, categorias: categorias});
-})  
+})   */
 
 /* POST */
 router.post('/', function(req, res, next){

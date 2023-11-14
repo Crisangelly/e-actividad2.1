@@ -1,6 +1,16 @@
 const Categoria_model = require('../models/Categoria_model');
 
 class CategoriaController{
+    ver_categorias(){
+        return new Promise((resolve, reject)=>{ 
+            Categoria_model.ver_categorias().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)});  
+        })   
+    }
+    ver_equipos_por_categoria(id){
+        return new Promise((resolve, reject)=>{
+            Categoria_model.ver_equipos_por_categoria(id).then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)});  
+        })  
+    } 
     ingresar_categoria(categoria){
         return Categoria_model.ingresar_categoria(categoria);
     }
@@ -9,17 +19,6 @@ class CategoriaController{
     }
     eliminar_categoria(id){
         return Categoria_model.eliminar_categoria(id);
-    }
-    mostrar_categorias(){
-        let mostrar = Categoria_model.mostrar_categorias();
-        if(mostrar){
-            return mostrar; 
-        }else{
-            return mostrar;
-        }   
-    }
-    ver_equipos_por_categoria(id){
-        return Categoria_model.ver_equipos_por_categoria(id);
     }
 }
 

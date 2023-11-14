@@ -1,6 +1,4 @@
-const patrocinadores = require('../ejemplos/patrocinadores');
-const respuesta = require('../models/Respuesta');
-const { v4: uuidv4 } = require('uuid');
+const connection = require('./db');
 
 class Patrocinador{
     constructor(id, nombre_comercial, persona_de_contacto, telefono, patrocinio, comentario){
@@ -14,6 +12,17 @@ class Patrocinador{
 }
 
 class PatrocinadorModel{
+    ver_patrocinador(){ 
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT `id_patrocinador`,`nombre_comercial`,`persona_de_contacto`,`telefono`,`nombre_patrocinio`,`monto`, `comentario` FROM `patrocinadores` JOIN `patrocinios` ON `idPatrocinio` = `id_patrocinio`', function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve(rows)  
+                }
+            })
+        })  
+    }
     ingresar_patrocinador(patrocinador){
         patrocinador.id = uuidv4();
         let nuevo_patrocinador = new Patrocinador(patrocinador.id, patrocinador.nombre_comercial, patrocinador.persona_de_contacto, patrocinador.telefono, patrocinador.patrocinio, patrocinador.comentario);
@@ -26,16 +35,6 @@ class PatrocinadorModel{
         let nuevo_patrocinador = new Patrocinador(patrocinador.id, patrocinador.nombre_comercial, patrocinador.persona_de_contacto, patrocinador.telefono, patrocinador.patrocinio, patrocinador.comentario);
         patrocinadores.push(nuevo_patrocinador);
         return patrocinadores
-    }
-    ver_patrocinador(){
-        if(patrocinadores.length > 0){
-            console.log("Los patrocinadores son:", patrocinadores);
-            let resultado = new respuesta(200, "consulta completada con éxito", patrocinadores); 
-            return resultado;
-        }else{
-            let resultado = new respuesta(404, "no hay patrocinadores registrados", undefined);
-            return resultado;
-        }
     }
 }
 
