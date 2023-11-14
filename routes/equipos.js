@@ -22,8 +22,13 @@ router.get('/', function (req, res, next) {
 
 /* POST */
 router.post('/', function(req, res, next){
-    let agregado = Equipos_Controller.ingresar_equipo(req.body)
-    res.status(agregado.codigo).send(agregado.resultado);
+    Equipos_Controller.ingresar_equipo(req.body).then(()=>{
+        Equipos_Controller.ver_equipos().then((resultados)=>{
+            res.json(resultados);
+        }).catch((error)=>{
+            res.status(500).send(error)
+        }) 
+    })
 });
 
 /* PUT */

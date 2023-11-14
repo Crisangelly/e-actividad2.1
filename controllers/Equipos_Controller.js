@@ -6,9 +6,6 @@ class EquipoController{
             Equipo_model.ver_equipos().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)}); 
         })  
     }
-    ingresar_equipo(equipo){
-        return Equipo_model.ingresar_equipo(equipo);
-    }
     ver_equipos_views(){
         let mostrarequipos= Equipo_model.ver_equipos_views();
         if(mostrarequipos){
@@ -16,6 +13,11 @@ class EquipoController{
         }else{
             return mostrarequipos;
         }   
+    }
+    ingresar_equipo(equipo){
+        return new Promise((resolve, reject)=>{
+            Equipo_model.ingresar_equipo(equipo).then(resolve()).catch((error)=>{reject(error)});    
+        }) 
     }
     editar_equipo(id, actualizar){
         return Equipo_model.editar_equipo(id, actualizar);

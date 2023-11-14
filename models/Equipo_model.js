@@ -1,19 +1,20 @@
 const connection = require('./db');
 
 class Equipo{
-    constructor(id, representante, modalidad, email, telefono, nombre_del_equipo, comentario, categoria){
-        this.id = id,
+    constructor(representante, email, telefono, nombre_de_equipo, participantes, comentario){
         this.representante = representante,
-        this.modalidad = modalidad,
         this.email = email,
         this.telefono = telefono,
-        this.nombre_del_equipo = nombre_del_equipo,
-        this.participantes = [],
-        this.comentario = comentario,
-        this.categoria = categoria
+        this.nombre_de_equipo = nombre_de_equipo,
+        this.participantes = participantes,
+        this.comentario = comentario
     }
-    agregar_participantes(participante){
-        this.participantes.push(participante);
+}
+
+class Inscripcion{
+    constructor(idCategoria, idEquipo){
+        this.idCategoria = idCategoria
+        this.idEquipo = idEquipo
     }
 }
 
@@ -30,14 +31,42 @@ class EquipoModel{
         })
     } 
     ingresar_equipo(equipo){
-        equipo.id = uuidv4();
-        let nuevo_equipo = new Equipo(equipo.id, equipo.representante, equipo.modalidad, equipo.email, equipo.telefono, equipo.nombre_del_equipo, equipo.comentario, equipo.categoria);
-        for (let i = 0; i < equipo.participantes.length; i++) {
-            nuevo_equipo.agregar_participantes(equipo.participantes[i])
-        }
-        equipos.push(nuevo_equipo);
-        let resultado = new respuesta(200, "equipo agregado con éxito", equipos); 
-        return resultado; 
+        return new Promise((resolve, reject) => { 
+            let Nuevo_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario)
+            connection.query('INSERT INTO `equipos` SET ?',Nuevo_equipo, function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    return resolve(equipo)
+                }
+            }) 
+        }).then(function (equipo) {
+            return new Promise((resolve, reject) => { 
+                connection.query('SELECT * FROM `equipos`', function(errE, rowsE, fieldsE) {
+                    if (errE){
+                        reject("La conexión a la base de datos a fallado")
+                    }else {
+                        let idDeEquipo = rowsE[rowsE.length -1].id_equipo
+                        let retorna = [equipo,idDeEquipo]
+                        resolve(retorna)
+                    }
+                }) 
+            })
+        }).then(function (equipoYID) {
+            return new Promise((resolve, reject) => { 
+                let idDelEquipo = equipoYID[1]
+                for (let i = 0; i < equipoYID[0].categorias.length; i++) { //Insertar varias inscripciones
+                let idDeCategoria = equipoYID[0].categorias[i]
+                let inscripcion = new Inscripcion(idDeCategoria, idDelEquipo)
+                    connection.query('INSERT INTO `inscripciones` SET ?',inscripcion, function(errFinal, rowsFinal, fieldsFinals) {
+                        if (errFinal){
+                            reject("La conexión a la base de datos a fallado")
+                        }
+                    })
+                }   
+                resolve()
+            })
+        })
     }
     ver_equipos_views(){
         if(equipos.length > 0){ 
