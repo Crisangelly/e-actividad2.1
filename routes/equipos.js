@@ -20,6 +20,15 @@ router.get('/', function (req, res, next) {
     res.render('verEquipos',{title: 'Equipos', equipos: equipos, categorias: categorias});
 })   */
 
+router.get('/padrinos', function (req, res, next) {
+    Equipos_Controller.ver_padrinos().then((resultados)=>{
+        res.json(resultados);
+    }).catch((error)=>{
+        res.status(500).send(error)
+    })
+});
+
+
 /* POST */
 router.post('/', function(req, res, next){
     Equipos_Controller.ingresar_equipo(req.body).then(()=>{

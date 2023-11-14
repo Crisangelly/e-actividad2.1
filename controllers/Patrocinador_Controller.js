@@ -1,4 +1,3 @@
-const Patrocinador_model = require('../models/Patrocinador_model');
 const Patrocinador_Model = require('../models/Patrocinador_model');
 
 class PatrocinadorController{
@@ -9,11 +8,16 @@ class PatrocinadorController{
     }
     ingresar_patrocinador(patrocinador){
         return new Promise((resolve, reject)=>{
-            Patrocinador_model.ingresar_patrocinador(patrocinador).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
+            Patrocinador_Model.ingresar_patrocinador(patrocinador).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
         })
     }
     ingresar_patrocinador_views(patrocinador){   
         return Patrocinador_Model.ingresar_patrocinador_views(patrocinador)
+    }
+    eliminar_patrocinador(id){
+        return new Promise((resolve, reject)=>{
+            Patrocinador_Model.eliminar_patrocinador(id).then(()=>{resolve()}).catch((error)=>{reject(error)}); 
+        })
     }
 }
 

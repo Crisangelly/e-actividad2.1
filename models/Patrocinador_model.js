@@ -91,6 +91,17 @@ class PatrocinadorModel{
         patrocinadores.push(nuevo_patrocinador);
         return patrocinadores */
     }
+    eliminar_patrocinador(id){
+        return new Promise((resolve, reject) => {
+            connection.query('DELETE FROM `patrocinadores` WHERE `id_patrocinador` = ?',id, function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve(rows)  
+                }
+            })
+        })  
+    }
 }
 
 module.exports = new PatrocinadorModel();

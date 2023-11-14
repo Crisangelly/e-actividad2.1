@@ -30,6 +30,24 @@ class EquipoModel{
             })
         })
     } 
+    ver_equipos_views(){
+        if(equipos.length > 0){ 
+            return equipos;
+        }else{
+            return equipos;
+        }
+    }  
+    ver_padrinos(){
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT `id_equipo`,`representante`,`participantes`,`nombre_de_equipo`,`id_patrocinador`, `nombre_comercial`, `persona_de_contacto` FROM `padrinos` JOIN `equipos` ON `id_equipo` = `idEquipo` JOIN `patrocinadores` ON `id_patrocinador` = `idPatrocinador`', function(err, rows, fields) {
+                if (err){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
+                    resolve(rows)  
+                }
+            })
+        })
+    }
     ingresar_equipo(equipo){
         return new Promise((resolve, reject) => { 
             let Nuevo_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario)
@@ -68,13 +86,6 @@ class EquipoModel{
             })
         })
     }
-    ver_equipos_views(){
-        if(equipos.length > 0){ 
-            return equipos;
-        }else{
-            return equipos;
-        }
-    }  
     editar_equipo(id, actualizar){
         let i = equipos.findIndex(e => e.id == id);
         if (i !== -1) {

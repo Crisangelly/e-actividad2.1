@@ -35,4 +35,15 @@ router.post('/', function (req, res, next) {
    res.status(200).send(ver)
 }); */
 
+
+/* DELETE */
+
+router.delete('/:index', function (req ,res , next) {
+   Patrocinador_Controller.eliminar_patrocinador(req.params.index).then(()=>{
+      res.json();
+   }).catch((error)=>{
+      res.status(500).send(error)
+   })
+})
+
 module.exports = router; 
