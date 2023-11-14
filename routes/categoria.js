@@ -21,20 +21,23 @@ router.get('/:index', function (req, res, next) {
 
 /* POST */
 router.post('/', function (req, res, next) {
-    let agregada = Categoria_Controller.ingresar_categoria(req.body);
-    res.status(agregada.codigo).send(agregada.resultado);
+    Categoria_Controller.ingresar_categoria(req.body).then(()=>{
+        Categoria_Controller.ver_categorias().then((resultados)=>{
+            res.json(resultados);
+        }).catch((error)=>{
+            res.status(500).send(error)
+        })
+    })
 });
 
 /* PUT */
 router.put('/:index', function (req, res, next) {
-    let editado = Categoria_Controller.editar_categoria(req.params.index, req.body);
-    res.status(editado.codigo).send(editado);
+
 });
 
 /* DELETE */
 router.delete('/:index', function (req, res, next) {
-    let eliminar = Categoria_Controller.eliminar_categoria(req.params.index); 
-    res.status(eliminar.codigo).send(eliminar); 
+
 }); 
 
 module.exports = router; 

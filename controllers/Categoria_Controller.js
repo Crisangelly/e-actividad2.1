@@ -12,13 +12,13 @@ class CategoriaController{
         })  
     } 
     ingresar_categoria(categoria){
-        return Categoria_model.ingresar_categoria(categoria);
+        return new Promise((resolve, reject)=>{
+            Categoria_model.ingresar_categoria(categoria).then(resolve()).catch((error)=>{reject(error)});    
+        }) 
     }
     editar_categoria(id, actualizar){
-        return Categoria_model.editar_categoria(id, actualizar);
     }
     eliminar_categoria(id){
-        return Categoria_model.eliminar_categoria(id);
     }
 }
 
