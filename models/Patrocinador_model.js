@@ -39,50 +39,18 @@ class PatrocinadorModel{
                     resolve(patrocinador)  
                 }
             })
-        }).then(function (patrocinador){
-            return new Promise((resolve, reject) => { 
-                if(patrocinador.idPatrocinio == 5){  
-                    connection.query('SELECT * FROM `patrocinadores`', function(errP, rowsP, fieldsP) {
-                        if (errP){
-                            reject("La conexión a la base de datos a fallado")
-                        }else {
-                            let idDelPatrocinador = rowsP[rowsP.length -1].id_patrocinador;
-                            let retorna = [patrocinador, idDelPatrocinador];
-                            resolve(retorna)
-                        }
-                    })  
-                }else{
-                    let retorna = [patrocinador]
-                    resolve(retorna)
-                }
-            }) 
-        }).then(function (patrocinadorYId){
-            return new Promise((resolve, reject) => { 
-                if(patrocinadorYId[0].idPatrocinio == 5){
-                    if(patrocinadorYId[0].idEquipo == ""){
-                        reject("Para ser un padrino debe patrocinar a algún equipo")
-                        //DEBE eliminar a ese patrocinador
-                        connection.query('DELETE FROM `patrocinadores` WHERE `id_patrocinador` = ?',patrocinadorYId[1], function(errFinal, rowsFinal, fieldsFinal) {
-                            if (errFinal){
-                                reject("La conexión a la base de datos a fallado")
-                            }else {
-                                resolve()
-                            }
-                        }) 
-                    }else{
-                        let Nuevo_padrino = new Padrino(patrocinadorYId[0].idEquipo, patrocinadorYId[1])
-                        connection.query('INSERT INTO `padrinos` SET ?',Nuevo_padrino, function(errFinal, rowsFinal, fieldsFinal) {
-                            if (errFinal){
-                                reject("La conexión a la base de datos a fallado")
-                            }else {
-                                resolve()
-                            }
-                        }) 
-                    } 
-                }else{
+        })
+    }
+    ingresar_padrino(patrocinador, idPatrocinador){
+        return new Promise((resolve, reject) => {
+            let Nuevo_padrino = new Padrino(patrocinador.idEquipo, idPatrocinador)
+            connection.query('INSERT INTO `padrinos` SET ?',Nuevo_padrino, function(errFinal, rowsFinal, fieldsFinal) {
+                if (errFinal){
+                    reject("La conexión a la base de datos a fallado")
+                }else {
                     resolve()
                 }
-            }) 
+            })   
         })
     }
     ingresar_patrocinador_views(patrocinador){   

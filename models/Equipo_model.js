@@ -58,32 +58,20 @@ class EquipoModel{
                     return resolve(equipo)
                 }
             }) 
-        }).then(function (equipo) {
-            return new Promise((resolve, reject) => { 
-                connection.query('SELECT * FROM `equipos`', function(errE, rowsE, fieldsE) {
-                    if (errE){
+        })
+    }
+    ingresar_inscripcion(equipo, idDelEquipo){
+        return new Promise((resolve, reject) => { 
+            for (let i = 0; i < equipo.categorias.length; i++) { //Insertar varias inscripciones
+            let idDeCategoria = equipo.categorias[i]
+            let inscripcion = new Inscripcion(idDeCategoria, idDelEquipo)
+                connection.query('INSERT INTO `inscripciones` SET ?',inscripcion, function(errFinal, rowsFinal, fieldsFinals) {
+                    if (errFinal){
                         reject("La conexión a la base de datos a fallado")
-                    }else {
-                        let idDeEquipo = rowsE[rowsE.length -1].id_equipo
-                        let retorna = [equipo,idDeEquipo]
-                        resolve(retorna)
                     }
-                }) 
-            })
-        }).then(function (equipoYID) {
-            return new Promise((resolve, reject) => { 
-                let idDelEquipo = equipoYID[1]
-                for (let i = 0; i < equipoYID[0].categorias.length; i++) { //Insertar varias inscripciones
-                let idDeCategoria = equipoYID[0].categorias[i]
-                let inscripcion = new Inscripcion(idDeCategoria, idDelEquipo)
-                    connection.query('INSERT INTO `inscripciones` SET ?',inscripcion, function(errFinal, rowsFinal, fieldsFinals) {
-                        if (errFinal){
-                            reject("La conexión a la base de datos a fallado")
-                        }
-                    })
-                }   
-                resolve()
-            })
+                })
+            }   
+            resolve()
         })
     }
     editar_equipo(id, actualizar){

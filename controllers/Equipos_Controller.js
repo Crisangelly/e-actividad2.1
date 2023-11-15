@@ -24,6 +24,11 @@ class EquipoController{
             Equipo_model.ingresar_equipo(equipo).then(resolve()).catch((error)=>{reject(error)});    
         }) 
     }
+    ingresar_inscripcion(equipo, idDelEquipo){
+        return new Promise((resolve, reject) => { 
+            Equipo_model.ingresar_inscripcion(equipo, idDelEquipo).then(resolve()).catch((error)=>{reject(error)});  
+        })
+    } 
     editar_equipo(id, actualizar){
         return Equipo_model.editar_equipo(id, actualizar);
     }
